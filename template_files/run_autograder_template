@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# Set up autograder files:
+cd /autograder/source
+
+python3 run_tests_final.py

@@ -24,3 +24,5 @@ python3 main.py
 Add the test case file and solution file. Click Run.
 This should generate a file called *autograder.zip*. 
 Upload this zip file to Gradescope.
+
+Currently this project only works for one program under test, with one driver program (can include other files). Will add unit testing capabilities options later.
