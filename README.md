@@ -6,7 +6,7 @@ First fork the repository, then clone onto a Unix-based machine **(tested for WS
 ```
 cd python-autograder
 
-// Add CPP Solution file to directory
+// Add Python Solution file to directory
 // Add Test case file (ex): make sure to have "---" separating different test cases
 
 //  Name: test_cases.txt
