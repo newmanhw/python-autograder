@@ -62,7 +62,7 @@ def run_student_script(student_filepath, input_data):
     """Run student script with resource restrictions."""
     try:
         process = subprocess.Popen(
-            ['python3', f'../submission/{student_filepath}'],
+            ['python3', f'/submission/{student_filepath}'],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -90,6 +90,7 @@ def grade():
     total_score = 0.0
     max_score = 100
     points_per_question = max_score/len(test_cases)
+    rounded_points = round(points_per_question, 2)
 
     for i, (input_file, output_file, visibility) in enumerate(test_cases):
         with open(input_file, 'r') as f:
@@ -105,7 +106,7 @@ def grade():
             if (visibility == "visible"):
                 test_results.append({
                     "score": 0.0,
-                    "max_score": points_per_question,
+                    "max_score": rounded_points,
                     "status": "failed",
                     "name": f"{student_filepath} Test Case {i+1}",
                     "output": f"Inputs:\n\n{input_data}\n\nError in your script:\n{errors}",
@@ -114,7 +115,7 @@ def grade():
             elif (visibility == "hidden"):
                 test_results.append({
                     "score": 0.0,
-                    "max_score": points_per_question,
+                    "max_score": rounded_points,
                     "status": "failed",
                     "name": f"{student_filepath} Test Case {i+1} (Hidden)",
                     "output": f"Error in your script:\n{errors}",
@@ -134,8 +135,8 @@ def grade():
                 # Test passed
                 if (visibility == "visible"):
                     test_results.append({
-                        "score": points_per_question,
-                        "max_score": points_per_question,
+                        "score": rounded_points,
+                        "max_score": rounded_points,
                         "status": "passed",
                         "name": f"{student_filepath} Test Case {i+1}",
                         "output": "Correct output.",
@@ -143,8 +144,8 @@ def grade():
                     })
                 elif (visibility == "hidden"):
                     test_results.append({
-                        "score": points_per_question,
-                        "max_score": points_per_question,
+                        "score": rounded_points,
+                        "max_score": rounded_points,
                         "status": "passed",
                         "name": f"{student_filepath} Test Case {i+1} (Hidden)",
                         "output": "Passed hidden test case.",
@@ -156,7 +157,7 @@ def grade():
                 if (visibility == "visible"):
                     test_results.append({
                         "score": 0.0,
-                        "max_score": points_per_question,
+                        "max_score": rounded_points,
                         "status": "failed",
                         "name": f"{student_filepath} Test Case {i+1}",
                         "output": f"{Fore.MAGENTA}Inputs:{Fore.RESET}\n\n{input_data}\n\n{Fore.MAGENTA}Expected:{Fore.RESET}\n\n{expected_output}\n\n{Fore.MAGENTA}Got:{Fore.RESET}\n\n{student_output}\n\n{Fore.MAGENTA}Difference:{Fore.RESET} {get_difference(student_output, expected_output)}",
@@ -166,7 +167,7 @@ def grade():
                 elif (visibility == "hidden"):
                     test_results.append({
                         "score": 0.0,
-                        "max_score": points_per_question,
+                        "max_score": rounded_points,
                         "status": "failed",
                         "name": f"{student_filepath} Test Case {i+1} (Hidden)",
                         "output": f"Failed hidden test case, check your logic!\n\n(This means that you need to further test your code)",

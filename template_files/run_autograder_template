@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+cp -a /autograder/submission/. /autograder/source/
 # Set up autograder files:
 cd /autograder/source
 

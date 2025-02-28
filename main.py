@@ -1,6 +1,7 @@
 import os
 import subprocess
 import shutil
+import zipfile
 import tkinter as tk
 from tkinter import filedialog, messagebox
 import time
@@ -9,18 +10,30 @@ import time
 def run_solution(input_file, output_dir, section_number, exe_path):
     if not exe_path:
         return
+    
     output_file = os.path.join(output_dir, f"output{section_number}.txt")
+    
     try:
-        result = subprocess.run(
-            ["python3", exe_path],
-            stdin=open(input_file, 'r'),
-            stdout=subprocess.PIPE,
-            text=True
-        )
+        with open(input_file, 'r') as infile:
+            result = subprocess.run(
+                ["python3", exe_path],
+                stdin=infile,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                check=False  # Allow execution even if there's an error
+            )
+        
         output_content = result.stdout.rstrip()
+
         with open(output_file, 'w') as outfile:
             outfile.write(output_content)
+
         print(f"Solution output saved to {output_file}")
+
+        if result.stderr:
+            print(f"Execution error in section {section_number}: {result.stderr.strip()}")
+
     except Exception as e:
         print(f"Error running solution executable: {e}")
 
@@ -39,7 +52,7 @@ def split_file_and_run(input_file, exe_path):
             if section_lines:
                 output_file = os.path.join(output_dir, f"input{section_number}.txt")
                 with open(output_file, 'w') as section_file:
-                    section_file.write(''.join([l.rstrip() + '\n' for l in section_lines]).strip('\n'))
+                    section_file.write(''.join(section_lines))  # Preserve empty lines
                 print(f"Written section {section_number} to {output_file}")
                 run_solution(output_file, output_dir, section_number, exe_path)
                 section_number += 1
@@ -50,7 +63,7 @@ def split_file_and_run(input_file, exe_path):
     if section_lines:
         output_file = os.path.join(output_dir, f"input{section_number}.txt")
         with open(output_file, 'w') as section_file:
-            section_file.write(''.join([l.rstrip() + '\n' for l in section_lines]).strip('\n'))
+            section_file.write(''.join(section_lines))
         print(f"Written section {section_number} to {output_file}")
         run_solution(output_file, output_dir, section_number, exe_path)
 
@@ -109,8 +122,18 @@ def select_solution_file():
     solution_entry.insert(0, file_path)
 
 def zip_build_folder():
-    zip_path = "./autograder"
-    shutil.make_archive(zip_path, 'zip', "./build")
+    zip_path = "./autograder.zip"  # Ensure the correct output filename
+    build_path = "./build"
+
+    with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        for root, _, files in os.walk(build_path):
+            for file in files:
+                if "Zone.Identifier" in file:
+                    continue  # Skip unwanted metadata files
+                file_path = os.path.join(root, file)
+                arcname = os.path.relpath(file_path, build_path)  # Preserve relative path
+                zipf.write(file_path, arcname)
+
     print(f"Created autograder.zip successfully.")
 
 def clean_build_folder():
@@ -147,9 +170,9 @@ def run_script():
     print("File generation completed.")
 
 
-    print("\nZipping files...")
-    zip_build_folder()
-    clean_build_folder()
+    #print("\nZipping files...")
+    #zip_build_folder()
+    #clean_build_folder()
     end_time = time.time()  
     print("Success! Upload autograder.zip to Gradescope.")
     elapsed_time = end_time - start_time
