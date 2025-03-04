@@ -62,7 +62,7 @@ def run_student_script(student_filepath, input_data):
     """Run student script with resource restrictions."""
     try:
         process = subprocess.Popen(
-            ['python3', f'/submission/{student_filepath}'],
+            ['python3', f'{student_filepath}'],
             stdin=subprocess.PIPE,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
