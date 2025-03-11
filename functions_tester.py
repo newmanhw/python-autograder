@@ -1,3 +1,5 @@
+# Replace m8 with the student submission filename
+
 import m8
 
 module = m8
