@@ -109,7 +109,7 @@ def grade():
                     "max_score": rounded_points,
                     "status": "failed",
                     "name": f"{student_filepath} Test Case {i+1}",
-                    "output": f"Inputs:\n\n{input_data}\n\nError in your script:\n{errors}",
+                    "output": f"{Fore.MAGENTA}Inputs:{Fore.RESET}\n\n{input_data}\n\nError in your script:\n{errors}",
                     "visibility": "visible"
                 })
             elif (visibility == "hidden"):
